@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
-    <height>698</height>
+    <width>1024</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -131,7 +131,7 @@
          <item row="0" column="7">
           <widget class="QLabel" name="label_11">
            <property name="text">
-            <string>План. об., кг</string>
+            <string>План., кг</string>
            </property>
           </widget>
          </item>
@@ -141,7 +141,7 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
-            <string>Рецептура</string>
+            <string>Рецепт.</string>
            </property>
           </widget>
          </item>
@@ -161,7 +161,7 @@
          <item row="1" column="7">
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string>Проволока</string>
+            <string>Провол.</string>
            </property>
           </widget>
          </item>
@@ -169,7 +169,14 @@
           <widget class="QComboBox" name="comboBoxProv"/>
          </item>
          <item row="1" column="1">
-          <widget class="QComboBox" name="comboBoxRcp"/>
+          <widget class="QComboBox" name="comboBoxRcp">
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item row="1" column="2" colspan="2">
           <widget class="QLabel" name="label_5">
@@ -227,6 +234,12 @@
            </item>
            <item>
             <widget class="QPlainTextEdit" name="plainTextEdit">
+             <property name="minimumSize">
+              <size>
+               <width>180</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="maximumSize">
               <size>
                <width>150</width>
@@ -271,7 +284,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton">
+          <widget class="QToolButton" name="toolButtonCopyPar">
            <property name="text">
             <string>-&gt;</string>
            </property>
@@ -418,7 +431,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditKmfp"/>
+          <widget class="QLineEdit" name="lineEditKfmp"/>
          </item>
          <item>
           <widget class="QLabel" name="label_24">
@@ -542,6 +555,40 @@
    <header>db/dbviewer.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tableViewPart</tabstop>
+  <tabstop>dateEditBeg</tabstop>
+  <tabstop>dateEditEnd</tabstop>
+  <tabstop>pushButtonUpd</tabstop>
+  <tabstop>comboBoxOnly</tabstop>
+  <tabstop>lineEditPart</tabstop>
+  <tabstop>dateEditPart</tabstop>
+  <tabstop>comboBoxSrc</tabstop>
+  <tabstop>lineEditKvo</tabstop>
+  <tabstop>comboBoxRcp</tabstop>
+  <tabstop>comboBoxMark</tabstop>
+  <tabstop>lineEditDiam</tabstop>
+  <tabstop>comboBoxProv</tabstop>
+  <tabstop>tableViewGlass</tabstop>
+  <tabstop>tableViewGlassCont</tabstop>
+  <tabstop>plainTextEdit</tabstop>
+  <tabstop>tableViewGlassPar</tabstop>
+  <tabstop>toolButtonCopyPar</tabstop>
+  <tabstop>lineEditPlot</tabstop>
+  <tabstop>lineEditVyaz</tabstop>
+  <tabstop>lineEditObm</tabstop>
+  <tabstop>lineEditOst</tabstop>
+  <tabstop>tableViewDoz</tabstop>
+  <tabstop>tableViewBrak</tabstop>
+  <tabstop>tableViewPress</tabstop>
+  <tabstop>lineEditKfmp</tabstop>
+  <tabstop>lineEditDl</tabstop>
+  <tabstop>lineEditPokr</tabstop>
+  <tabstop>lineEditFil</tabstop>
+  <tabstop>lineEditDel</tabstop>
+  <tabstop>tableViewChem</tabstop>
+  <tabstop>tableViewMech</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

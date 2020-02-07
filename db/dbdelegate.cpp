@@ -113,10 +113,10 @@ void DbDelegate::setEditorData ( QWidget * editor, const QModelIndex & index ) c
                 }
             }
         }
+        QVariant dat=sqlModel->data(index,Qt::EditRole);
         if (sqlModel->columnType(index.column()==QMetaType::QDate)){
             CustomDateEdit *dateEdit = qobject_cast<CustomDateEdit *>(editor);
             if (dateEdit){
-                QVariant dat=sqlModel->data(index,Qt::EditRole);
                 if (dat.isNull()){
                     dateEdit->setDate(dateEdit->minimumDate());
                 } else {
@@ -125,9 +125,27 @@ void DbDelegate::setEditorData ( QWidget * editor, const QModelIndex & index ) c
                 return;
             }
         }
-        if (sqlModel->validator(index.column())){
-            QLineEdit *line = qobject_cast<QLineEdit *>(editor);
-            if (line) line->setValidator(sqlModel->validator(index.column()));
+        QLineEdit *line = qobject_cast<QLineEdit *>(editor);
+        if (line) {
+            if (sqlModel->validator(index.column())){
+                line->setValidator(sqlModel->validator(index.column()));
+                QDoubleValidator *dval = qobject_cast<QDoubleValidator *>(sqlModel->validator(index.column()));
+                if (dval){
+                    if (dat.isNull()){
+                        line->clear();
+                    } else {
+                        line->setText(QString::number(dat.toDouble(),'f',dval->decimals()));
+                    }
+                    return;
+                }
+            }
+
+            if (dat.isNull()){
+                line->clear();
+            } else {
+                line->setText(dat.toString());
+            }
+            return;
         }
     }
     return QItemDelegate::setEditorData(editor, index);

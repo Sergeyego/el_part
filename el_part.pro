@@ -30,7 +30,9 @@ SOURCES += \
     db/dblogin.cpp \
     db/dbmapper.cpp \
     db/dbtablemodel.cpp \
-    db/dbviewer.cpp
+    db/dbviewer.cpp \
+    models.cpp \
+    rels.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -38,7 +40,9 @@ HEADERS += \
     db/dblogin.h \
     db/dbmapper.h \
     db/dbtablemodel.h \
-    db/dbviewer.h
+    db/dbviewer.h \
+    models.h \
+    rels.h
 
 FORMS += \
         mainwidget.ui \
