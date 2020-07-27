@@ -32,7 +32,8 @@ SOURCES += \
     db/dbtablemodel.cpp \
     db/dbviewer.cpp \
     models.cpp \
-    rels.cpp
+    rels.cpp \
+    dialogloadchem.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -42,11 +43,13 @@ HEADERS += \
     db/dbtablemodel.h \
     db/dbviewer.h \
     models.h \
-    rels.h
+    rels.h \
+    dialogloadchem.h
 
 FORMS += \
         mainwidget.ui \
-    db/dblogin.ui
+    db/dblogin.ui \
+    dialogloadchem.ui
 
 RESOURCES += \
     res.qrc

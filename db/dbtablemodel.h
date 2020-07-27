@@ -121,7 +121,7 @@ public:
     int columnCount(const QModelIndex &parent=QModelIndex()) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    bool addColumn(QString name, QString display, QValidator *validator=NULL, DbRelation *relation=NULL);
+    bool addColumn(QString name, QString display, DbRelation *relation=NULL);
     virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     void setFilter(QString s);
     void setSort(QString s);
@@ -134,6 +134,7 @@ public:
     QVariant nullVal(int column) const;
     int currentEdtRow();
     QValidator* validator(int column) const;
+    void setValidator(int column, QValidator *validator);
     void setDefaultValue(int column, QVariant value);
     void setColumnFlags(int column, Qt::ItemFlags flags);
 

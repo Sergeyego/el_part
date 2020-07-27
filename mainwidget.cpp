@@ -11,6 +11,20 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->dateEditEnd->setDate(QDate::currentDate());
     ui->pushButtonUpd->setIcon(this->style()->standardIcon(QStyle::SP_BrowserReload));
 
+    modelChem = new ModelChemSrc(this);
+    ui->tableViewChem->setModel(modelChem);
+    ui->tableViewChem->setColumnHidden(0,true);
+    ui->tableViewChem->setColumnHidden(1,true);
+    ui->tableViewChem->setColumnWidth(2,80);
+    ui->tableViewChem->setColumnWidth(3,70);
+    ui->tableViewChem->setColumnWidth(4,110);
+
+    modelMech = new ModelMechSrc(this);
+    ui->tableViewMech->setModel(modelMech);
+    ui->tableViewMech->setColumnHidden(0,true);
+    ui->tableViewMech->setColumnWidth(1,180);
+    ui->tableViewMech->setColumnWidth(2,80);
+
     modelPart = new ModelPart(this);
     ui->tableViewPart->setModel(modelPart);
     ui->tableViewPart->setColumnHidden(0,true);
@@ -45,6 +59,9 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addMapping(ui->lineEditPokr,16);
     mapper->addMapping(ui->lineEditFil,17);
     mapper->addMapping(ui->lineEditDel,18);
+    mapper->addMapping(ui->lineEditPartProv,19);
+    mapper->addMapping(ui->lineEditMasDry,20);
+    mapper->addMapping(ui->lineEditMasGl,21);
 
     mapper->setDefaultFocus(1);
     mapper->addLock(ui->dateEditBeg);
@@ -60,14 +77,18 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addEmptyLock(ui->tableViewChem);
     mapper->addEmptyLock(ui->tableViewMech);
     mapper->addEmptyLock(ui->toolButtonCopyPar);
+    mapper->addEmptyLock(ui->toolButtonChem);
 
     ui->comboBoxOnly->setModel(Rels::instance()->relMark->model());
     ui->comboBoxOnly->setModelColumn(1);
     ui->comboBoxOnly->setCurrentIndex(-1);
 
+    connect(mapper,SIGNAL(currentIndexChanged(int)),this,SLOT(refreshCont(int)));
+
     connect(ui->pushButtonUpd,SIGNAL(clicked(bool)),this,SLOT(updPart()));
     connect(ui->comboBoxOnly,SIGNAL(currentIndexChanged(QString)),this,SLOT(updPart()));
     connect(ui->comboBoxOnly,SIGNAL(currentTextChanged(QString)),this,SLOT(updPartFlf(QString)));
+    connect(ui->toolButtonChem,SIGNAL(clicked(bool)),this,SLOT(loadChem()));
     updPart();
 }
 
@@ -91,4 +112,18 @@ void MainWidget::updPartFlf(QString s)
     if (s.isEmpty()){
         ui->comboBoxOnly->setCurrentIndex(-1);
     }
+}
+
+void MainWidget::refreshCont(int ind)
+{
+    QModelIndex ip=ui->tableViewPart->model()->index(ind,0);
+    int id_part=ui->tableViewPart->model()->data(ip,Qt::EditRole).toInt();
+    modelChem->refresh(id_part);
+    modelMech->refresh(id_part);
+}
+
+void MainWidget::loadChem()
+{
+    DialogLoadChem d;
+    d.exec();
 }

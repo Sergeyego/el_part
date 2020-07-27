@@ -113,17 +113,16 @@ QVariant DbTableModel::headerData(int section, Qt::Orientation orientation, int 
     return QAbstractTableModel::headerData(section, orientation, role);
 }
 
-bool DbTableModel::addColumn(QString name, QString display, QValidator *validator, DbRelation *relation)
+bool DbTableModel::addColumn(QString name, QString display, DbRelation *relation)
 {
     QVariant emptyval=defaultRecord.value(name);
-    if (!validator){
-        if (emptyval.type()==QMetaType::Int || emptyval.type()==QMetaType::LongLong){
-            validator = new QIntValidator(this);
-        } else if (emptyval.type()==QMetaType::Double){
-            QDoubleValidator *v = new QDoubleValidator(this);
-            v->setDecimals(1);
-            validator = v;
-        }
+    QValidator *validator(NULL);
+    if (emptyval.type()==QMetaType::Int || emptyval.type()==QMetaType::LongLong){
+        validator = new QIntValidator(this);
+    } else if (emptyval.type()==QMetaType::Double){
+        QDoubleValidator *v = new QDoubleValidator(this);
+        v->setDecimals(1);
+        validator = v;
     }
     col tmpColumn;
     tmpColumn.name=name;
@@ -233,6 +232,14 @@ int DbTableModel::currentEdtRow()
 QValidator *DbTableModel::validator(int column) const
 {
     return modelData->column(column)->validator;
+}
+
+void DbTableModel::setValidator(int column, QValidator *validator)
+{
+    if (validator){
+        validator->setLocale(QLocale::English);
+    }
+    modelData->column(column)->validator=validator;
 }
 
 void DbTableModel::setDefaultValue(int column, QVariant value)
