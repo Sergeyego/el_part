@@ -137,6 +137,7 @@ public:
     void setValidator(int column, QValidator *validator);
     void setDefaultValue(int column, QVariant value);
     void setColumnFlags(int column, Qt::ItemFlags flags);
+    QVariant defaultValue(int column);
 
 protected:
     QString tableName;

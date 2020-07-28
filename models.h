@@ -26,11 +26,11 @@ public:
     ~ModelChem();
     void refresh(int id_part);
 private:
-    QMap <int,range> map;
     QColor getColor(const QModelIndex &index) const;
     QString getToolTip(const QModelIndex &index) const;
 
 protected:
+    QMap <int,range> map;
     QString tablename;
     int colVal;
     int colIdChem;
@@ -43,6 +43,8 @@ class ModelChemSrc : public ModelChem
 {
 public:
     ModelChemSrc(QObject *parent=0);
+    bool addChem(int id_chem, double val);
+    QList <int> ids();
 };
 
 class ModelMechSrc : public ModelChem

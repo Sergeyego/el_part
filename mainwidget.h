@@ -5,6 +5,7 @@
 #include "models.h"
 #include "db/dbmapper.h"
 #include "dialogloadchem.h"
+#include <QSqlQuery>
 
 namespace Ui {
 class MainWidget;

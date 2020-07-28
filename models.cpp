@@ -153,6 +153,26 @@ ModelChemSrc::ModelChemSrc(QObject *parent) : ModelChem("parti_chem",parent)
     tuQuery="select c.id_chem, c.min, c.max from chem_tu as c where c.id_el = (select p.id_el from parti as p where p.id = :id )";
 }
 
+bool ModelChemSrc::addChem(int id_chem, double val)
+{
+    int id_part=defaultValue(colIdPart).toInt();
+    QSqlQuery query;
+    query.prepare("insert into parti_chem (id_part, id_chem, kvo) values (:id_part, :id_chem, :kvo)");
+    query.bindValue(":id_part",id_part);
+    query.bindValue(":id_chem",id_chem);
+    query.bindValue(":kvo",val);
+    bool ok=query.exec();
+    if (!ok){
+        QMessageBox::critical(NULL,"Error",query.lastError().text(),QMessageBox::Cancel);
+    }
+    return ok;
+}
+
+QList <int> ModelChemSrc::ids()
+{
+    return map.keys();
+}
+
 ModelMechSrc::ModelMechSrc(QObject *parent) : ModelChem("parti_mech",parent)
 {
     addColumn("id_part","id_part");

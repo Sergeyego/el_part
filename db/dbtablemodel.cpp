@@ -252,6 +252,11 @@ void DbTableModel::setColumnFlags(int column, Qt::ItemFlags flags)
     modelData->column(column)->flags=flags;
 }
 
+QVariant DbTableModel::defaultValue(int column)
+{
+    return defaultTmpRow[column];
+}
+
 bool DbTableModel::insertDb()
 {
     QSqlQuery query;

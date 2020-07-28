@@ -125,5 +125,15 @@ void MainWidget::refreshCont(int ind)
 void MainWidget::loadChem()
 {
     DialogLoadChem d;
-    d.exec();
+    if (d.exec()==QDialog::Accepted){
+        QList <int> l = modelChem->ids();
+        for (int key:l){
+            QString chem=Rels::instance()->relChem->data(QString::number(key)).toString();
+            double val=d.chemVal(chem);
+            if (val>0){
+                modelChem->addChem(key,val);
+            }
+        }
+    }
+    modelChem->select();
 }

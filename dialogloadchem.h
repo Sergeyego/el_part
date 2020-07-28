@@ -4,6 +4,12 @@
 #include <QDialog>
 #include <QSortFilterProxyModel>
 #include <QFileSystemModel>
+#include <QDebug>
+#include <QFileDialog>
+#include <QSettings>
+#include <QXmlStreamReader>
+#include <QFile>
+#include <math.h>
 
 namespace Ui {
 class DialogLoadChem;
@@ -16,12 +22,20 @@ class DialogLoadChem : public QDialog
 public:
     explicit DialogLoadChem(QWidget *parent = 0);
     ~DialogLoadChem();
+    double chemVal(QString chem);
 
 private:
     Ui::DialogLoadChem *ui;
+    QFileSystemModel *fileModel;
+    void loadXmlIds(QXmlStreamReader &reader);
+    void loadXmlStat(QXmlStreamReader &reader);
+    QString loadXmlText(QXmlStreamReader &reader, QString tag);
+    QMap <QString, double> chemMap;
 
 private slots:
-    void setCurrentDir(QModelIndex index);
+    void setCurrentDir();
+    void setCurrentDir(QString path);
+    void parceXml(QModelIndex index);
 };
 
 #endif // DIALOGLOADCHEM_H
