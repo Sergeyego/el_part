@@ -8,7 +8,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
 
     ui->dateEditBeg->setDate(QDate::currentDate().addDays(-QDate::currentDate().dayOfYear()+1));
-    ui->dateEditEnd->setDate(QDate::currentDate());
+    ui->dateEditEnd->setDate(QDate(QDate::currentDate().year(),12,31));
     ui->pushButtonUpd->setIcon(this->style()->standardIcon(QStyle::SP_BrowserReload));
 
     modelChem = new ModelChemSrc(this);
@@ -24,6 +24,32 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->tableViewMech->setColumnHidden(0,true);
     ui->tableViewMech->setColumnWidth(1,180);
     ui->tableViewMech->setColumnWidth(2,80);
+
+    modelRab = new ModelRab(this);
+    ui->tableViewPress->setModel(modelRab);
+    ui->tableViewPress->setColumnHidden(0,true);
+    ui->tableViewPress->setColumnHidden(1,true);
+    ui->tableViewPress->setColumnWidth(2,75);
+    ui->tableViewPress->setColumnWidth(3,120);
+    ui->tableViewPress->setColumnWidth(4,120);
+    ui->tableViewPress->setColumnWidth(5,65);
+    ui->tableViewPress->setColumnWidth(6,65);
+    ui->tableViewPress->setColumnWidth(7,65);
+    ui->tableViewPress->setColumnWidth(8,65);
+    ui->tableViewPress->setColumnWidth(9,65);
+
+    modelMix = new ModelMix(this);
+    ui->tableViewDoz->setModel(modelMix);
+    ui->tableViewDoz->setColumnHidden(0,true);
+    ui->tableViewDoz->setColumnWidth(1,350);
+    ui->tableViewDoz->setColumnWidth(2,70);
+
+    modelGlass = new ModelGlass(this);
+    ui->tableViewGlass->setModel(modelGlass);
+    ui->tableViewGlass->setColumnHidden(0,true);
+    ui->tableViewGlass->setColumnHidden(1,true);
+    ui->tableViewGlass->setColumnWidth(2,100);
+    ui->tableViewGlass->setColumnWidth(3,300);
 
     modelPart = new ModelPart(this);
     ui->tableViewPart->setModel(modelPart);
@@ -72,7 +98,6 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addEmptyLock(ui->tableViewGlassCont);
     mapper->addEmptyLock(ui->tableViewGlassPar);
     mapper->addEmptyLock(ui->tableViewDoz);
-    mapper->addEmptyLock(ui->tableViewBrak);
     mapper->addEmptyLock(ui->tableViewPress);
     mapper->addEmptyLock(ui->tableViewChem);
     mapper->addEmptyLock(ui->tableViewMech);
@@ -105,6 +130,9 @@ void MainWidget::updPart()
         id_el=ui->comboBoxOnly->model()->data(ui->comboBoxOnly->model()->index(ind,0),Qt::EditRole).toInt();
     }
     modelPart->refresh(ui->dateEditBeg->date(),ui->dateEditEnd->date(),id_el);
+    if (sender()==ui->pushButtonUpd){
+        modelMix->refreshRel(ui->dateEditBeg->date().addYears(-1),ui->dateEditEnd->date().addYears(1));
+    }
 }
 
 void MainWidget::updPartFlf(QString s)
@@ -120,6 +148,9 @@ void MainWidget::refreshCont(int ind)
     int id_part=ui->tableViewPart->model()->data(ip,Qt::EditRole).toInt();
     modelChem->refresh(id_part);
     modelMech->refresh(id_part);
+    modelRab->refresh(id_part);
+    modelMix->refresh(id_part);
+    modelGlass->refresh(id_part);
 }
 
 void MainWidget::loadChem()

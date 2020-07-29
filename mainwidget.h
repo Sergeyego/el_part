@@ -25,6 +25,9 @@ private:
     DbMapper *mapper;
     ModelChemSrc *modelChem;
     ModelMechSrc *modelMech;
+    ModelRab *modelRab;
+    ModelMix *modelMix;
+    ModelGlass *modelGlass;
 
 private slots:
     void updPart();

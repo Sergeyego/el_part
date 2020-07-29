@@ -186,3 +186,123 @@ ModelMechSrc::ModelMechSrc(QObject *parent) : ModelChem("parti_mech",parent)
     colVal=2;
     tuQuery="select m.id_mech, m.min, m.max from mech_tu as m where m.id_el = (select p.id_el from parti as p where p.id = :id )";
 }
+
+ModelRab::ModelRab(QObject *parent) : DbTableModel("part_prod",parent)
+{
+
+    QString qu=QString("select r.id, r.snam "
+            "from rab_rab r inner join rab_qual q on q.id_rab=r.id "
+            "inner join rab_prof p on p.id=q.id_prof "
+            "inner join rab_razr z on z.id=q.id_razr "
+            "where q.dat=(select max(dat) from rab_qual where dat<='%1' and id_rab=r.id and id_prof=1 and id_razr in (2,3)) "
+            "order by r.snam").arg(QDate::currentDate().toString("yyyy-MM-dd"));
+    relRab = new DbRelation(qu,0,1,this);
+
+    addColumn("id","id");
+    addColumn("id_part","id_part");
+    addColumn("dat",QString::fromUtf8("Дата"));
+    addColumn("id_press",QString::fromUtf8("Пресс"),Rels::instance()->relPress);
+    addColumn("id_brig",QString::fromUtf8("Бригадир"),relRab);
+    addColumn("kvo",QString::fromUtf8("Кол-во,кг"));
+    addColumn("davl",QString::fromUtf8("Давлен."));
+    addColumn("loss",QString::fromUtf8("Отх.ших."));
+    addColumn("rods",QString::fromUtf8("Пров.,кг"));
+    addColumn("garb",QString::fromUtf8("Отх.мус."));
+
+    setSort("part_prod.dat");
+}
+
+void ModelRab::refresh(int id_part)
+{
+    DbRelationalModel *relModel=qobject_cast<DbRelationalModel *>(relRab->model());
+    if (relModel){
+        QString qu=QString("select r.id, r.snam "
+                "from rab_rab r inner join rab_qual q on q.id_rab=r.id "
+                "inner join rab_prof p on p.id=q.id_prof "
+                "inner join rab_razr z on z.id=q.id_razr "
+                "where q.dat=(select max(dat) from rab_qual where dat<=(select dat_part from parti where id = %1 ) and id_rab=r.id and id_prof=1 and id_razr in (2,3)) "
+                "order by r.snam").arg(id_part);
+        relModel->setQuery(qu);
+    }
+
+    setFilter("part_prod.id_part = "+QString::number(id_part));
+    setDefaultValue(1,id_part);
+    select();
+}
+
+ModelMix::ModelMix(QObject *parent) : DbTableModel("parti_mix",parent)
+{
+    relMix = new DbRelation(relQuery(QDate(QDate::currentDate().year()-1,1,1),QDate(QDate::currentDate().year(),12,31)),0,1,this);
+    addColumn("id_part","id_part");
+    addColumn("id_dos",QString::fromUtf8("Партия дозировки"),relMix);
+    addColumn("kvo",QString::fromUtf8("Кол-во,кг"));
+    setSort("parti_mix.id_dos");
+}
+
+void ModelMix::refresh(int id_part)
+{
+    setFilter("parti_mix.id_part = "+QString::number(id_part));
+    setDefaultValue(0,id_part);
+    select();
+}
+
+void ModelMix::refreshRel(QDate beg, QDate end)
+{
+    DbRelationalModel *relModel=qobject_cast<DbRelationalModel *>(relMix->model());
+    if (relModel){
+        relModel->setQuery(relQuery(beg,end));
+    }
+}
+
+QString ModelMix::relQuery(QDate beg, QDate end)
+{
+    return QString("select d.id, cast(d.parti || '  ' || n.nam || '  ' || d.dat || ' ' || d.tm as varchar(64)) as nam "
+                       "from dosage d inner join rcp_nam n on n.id=d.id_rcp "
+                       "where d.dat between '%1' and '%2' "
+                       "order by d.parti, d.dat desc, d.tm desc").arg(beg.toString("yyyy-MM-dd")).arg(end.toString("yyyy-MM-dd"));
+}
+
+ModelGlass::ModelGlass(QObject *parent) : DbTableModel("acc_glyba",parent)
+{
+    relConsLoad = new DbRelation(relQuery(-1),0,1,this);
+    addColumn("id","id");
+    addColumn("id_part","id_part");
+    addColumn("id_glyb_part",QString::fromUtf8("Стекло"),Rels::instance()->relGlass);
+    addColumn("id_glass_cons_load",QString::fromUtf8("Расходник"),relConsLoad);
+
+    setSort("acc_glyba.id");
+}
+
+void ModelGlass::refresh(int id_part)
+{
+    DbRelationalModel *relModel=qobject_cast<DbRelationalModel *>(relConsLoad->model());
+    if (relModel){
+        relModel->setQuery(relQuery(id_part));
+    }
+    setFilter("acc_glyba.id_part = "+QString::number(id_part));
+    setDefaultValue(1,id_part);
+    select();
+}
+
+QString ModelGlass::relQuery(int id_part)
+{
+    return QString("select st.id, ('№'||c.num||'; загр. '||to_char(l.dat_load,'dd.MM.yy')||'; '||COALESCE(mk.nam, ms.nam)||'; парт.'|| l.parti_glass) as info "
+                   "from ( "
+                   "select l.id from glass_cons_load as l "
+                   "where l.dat_load=(select max(ll.dat_load) from glass_cons_load as ll where ll.dat_load<= (select dat_part-1 from parti where id = %1 ) and ll.id_cons=l.id_cons) "
+                   "union "
+                   "select l.id from glass_cons_load as l "
+                   "where l.dat_load=(select max(ll.dat_load) from glass_cons_load as ll where ll.dat_load<= (select dat_part from parti where id = %2 ) and ll.id_cons=l.id_cons) "
+                   "union "
+                   "select l.id from glass_cons_load as l "
+                   "where l.dat_load=(select max(ll.dat_load) from glass_cons_load as ll where ll.dat_load<= (select dat_part+1 from parti where id = %3 ) and ll.id_cons=l.id_cons) "
+                   ") as st "
+                   "inner join glass_cons_load as l on l.id=st.id "
+                   "inner join glass_cons as c on c.id=l.id_cons "
+                   "left join glass_korr_load as gl on gl.id=l.id_korr_load "
+                   "left join glass_korr as k on k.id=gl.id_korr "
+                   "left join matr as mk on mk.id=gl.id_matr "
+                   "left join glass_sump_load as sl on sl.id=l.id_sump_load "
+                   "left join matr as ms on ms.id=sl.id_matr "
+                   "order by c.num, l.dat_load").arg(id_part).arg(id_part).arg(id_part);
+}

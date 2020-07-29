@@ -53,4 +53,33 @@ public:
     ModelMechSrc(QObject *parent=0);
 };
 
+class ModelRab : public DbTableModel
+{
+public:
+    ModelRab(QObject *parent=0);
+    void refresh(int id_part);
+private:
+    DbRelation *relRab;
+};
+
+class ModelMix : public DbTableModel
+{
+public:
+    ModelMix(QObject *parent=0);
+    void refresh(int id_part);
+    void refreshRel(QDate beg, QDate end);
+private:
+    DbRelation *relMix;
+    QString relQuery(QDate beg, QDate end);
+};
+
+class ModelGlass : public DbTableModel
+{
+public:
+    ModelGlass(QObject *parent=0);
+    void refresh(int id_part);
+private:
+    DbRelation *relConsLoad;
+    QString relQuery(int id_part);
+};
 #endif // MODELS_H
