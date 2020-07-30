@@ -306,3 +306,114 @@ QString ModelGlass::relQuery(int id_part)
                    "left join matr as ms on ms.id=sl.id_matr "
                    "order by c.num, l.dat_load").arg(id_part).arg(id_part).arg(id_part);
 }
+
+ModelConsStatData::ModelConsStatData(QObject *parent) :ModelRo(parent)
+{
+    dec=1;
+    connect(this,SIGNAL(newQuery()),this,SLOT(refreshInPar()));
+}
+
+void ModelConsStatData::refresh(int id_load)
+{
+    current_id_load=id_load;
+    QSqlQuery query;
+    query.prepare("(select d.id_load, d.proc, m.nam, l.part_lump, l.modul, NULL "
+                  "from glass_korr_load_data as d "
+                  "inner join glass_sump_load as l on l.id=d.id_sump_load "
+                  "inner join matr as m on m.id=l.id_matr "
+                  "inner join glass_sump as s on s.id=l.id_sump "
+                  "where d.id_load = (select id_korr_load from glass_cons_load where id = :id_load1 ) order by proc) "
+                  "union "
+                  "(select NULL, 100.0, mm.nam, ll.part_lump, ll.modul, ll.id "
+                  "from glass_sump_load as ll "
+                  "inner join matr as mm on mm.id=ll.id_matr "
+                  "inner join glass_sump as ss on ss.id=ll.id_sump "
+                  "where ll.id = (select id_sump_load from glass_cons_load where id = :id_load2 ))");
+    query.bindValue(":id_load1",id_load);
+    query.bindValue(":id_load2",id_load);
+    if (execQuery(query)){
+        setHeaderData(1,Qt::Horizontal,QString::fromUtf8("%"));
+        setHeaderData(2,Qt::Horizontal,QString::fromUtf8("Стекло"));
+        setHeaderData(3,Qt::Horizontal,QString::fromUtf8("Парт.гл."));
+        setHeaderData(4,Qt::Horizontal,QString::fromUtf8("Модуль"));
+    }
+}
+
+QVariant ModelConsStatData::data(const QModelIndex &item, int role) const
+{
+    if (role==Qt::ToolTipRole){
+        QVariant id=ModelRo::data(index(item.row(),0),Qt::EditRole);
+        if (!id.isNull()){
+            QString str;
+            QList<QString> l=inPar.values(id.toInt());
+            foreach (QString s, l) {
+                if (!str.isEmpty()){
+                    str+="\n";
+                }
+                str+=s;
+            }
+            if (!str.isEmpty()){
+                str.prepend(QString::fromUtf8("Параметры корректора ")+QString::fromUtf8(":\n"));
+            }
+            return str;
+        }
+    }
+    return ModelRo::data(item,role);
+}
+
+void ModelConsStatData::refreshInPar()
+{
+    QSqlQuery qu;
+    qu.prepare("select l.id_load, p.nam, l.val, l.temp, l.dat "
+               "from glass_korr_load_par as l "
+               "inner join glass_par as p on p.id=l.id_param "
+               "where l.id_load = (select id_korr_load from glass_cons_load where id= :id_load)");
+    qu.bindValue(":id_load",current_id_load);
+    inPar.clear();
+    if (qu.exec()){
+        while (qu.next()){
+            QString val=qu.value(1).toString()+QString::fromUtf8(" = ")+qu.value(2).toString();
+            if (!qu.value(3).isNull()){
+                val+=QString::fromUtf8(" (")+qu.value(3).toString()+QString::fromUtf8("°С)");
+            }
+            val+=" "+qu.value(4).toDate().toString("dd.MM.yy");
+            inPar.insert(qu.value(0).toInt(),val);
+        }
+    } else {
+        QMessageBox::critical(NULL,tr("Error"),qu.lastError().text(),QMessageBox::Cancel);
+    }
+}
+
+ModelConsStatPar::ModelConsStatPar(QObject *parent) : ModelRo(parent)
+{
+    dec=3;
+}
+
+QVariant ModelConsStatPar::data(const QModelIndex &item, int role) const
+{
+    if (role==Qt::DisplayRole && item.column()==3){
+        return QLocale().toString(data(item,Qt::EditRole).toDouble(),'f',1);
+    }
+    return ModelRo::data(item,role);
+}
+
+void ModelConsStatPar::refresh(int id_load, int id_part)
+{
+    QSqlQuery query;
+    query.prepare("select jp.id_param, gp.nam, jp.val, jp.temp, jp.dat from "
+                  "(select id_load, id_param, max(dat) as dat "
+                  "from glass_cons_load_par as p where id_load = :id_load "
+                  "and dat<=(select dat_part from parti where id = :id_part ) "
+                  "group by id_param, id_load) as p "
+                  "inner join glass_cons_load_par as jp on jp.id_load= p.id_load and jp.id_param=p.id_param and jp.dat=p.dat "
+                  "inner join glass_par as gp on (gp.id=jp.id_param) "
+                  "order by jp.id_param desc, jp.dat");
+    query.bindValue(":id_load",id_load);
+    query.bindValue(":id_part",id_part);
+    if (execQuery(query)){
+        setHeaderData(1,Qt::Horizontal,QString::fromUtf8("Параметр"));
+        setHeaderData(2,Qt::Horizontal,QString::fromUtf8("Значен."));
+        setHeaderData(3,Qt::Horizontal,QString::fromUtf8("Тизм.,°С"));
+        setHeaderData(4,Qt::Horizontal,QString::fromUtf8("Дата"));
+    }
+}

@@ -33,7 +33,8 @@ SOURCES += \
     db/dbviewer.cpp \
     models.cpp \
     rels.cpp \
-    dialogloadchem.cpp
+    dialogloadchem.cpp \
+    modelro.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -44,7 +45,8 @@ HEADERS += \
     db/dbviewer.h \
     models.h \
     rels.h \
-    dialogloadchem.h
+    dialogloadchem.h \
+    modelro.h
 
 FORMS += \
         mainwidget.ui \

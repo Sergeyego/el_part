@@ -28,12 +28,16 @@ private:
     ModelRab *modelRab;
     ModelMix *modelMix;
     ModelGlass *modelGlass;
+    ModelConsStatData *modelConsStatData;
+    ModelConsStatPar *modelConsStatPar;
+    int currentIdPart();
 
 private slots:
     void updPart();
     void updPartFlf(QString s);
     void refreshCont(int ind);
     void loadChem();
+    void refreshGlassData(QModelIndex index);
 };
 
 #endif // MAINWIDGET_H

@@ -51,6 +51,25 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->tableViewGlass->setColumnWidth(2,100);
     ui->tableViewGlass->setColumnWidth(3,300);
 
+    modelConsStatData = new ModelConsStatData(this);
+    modelConsStatData->refresh(-1);
+    ui->tableViewGlassCont->setModel(modelConsStatData);
+    ui->tableViewGlassCont->setColumnHidden(0,true);
+    ui->tableViewGlassCont->setColumnWidth(1,40);
+    ui->tableViewGlassCont->setColumnWidth(2,70);
+    ui->tableViewGlassCont->setColumnWidth(3,50);
+    ui->tableViewGlassCont->setColumnWidth(4,50);
+    ui->tableViewGlassCont->setColumnHidden(5,true);
+
+    modelConsStatPar = new ModelConsStatPar(this);
+    modelConsStatPar->refresh(-1,-1);
+    ui->tableViewGlassPar->setModel(modelConsStatPar);
+    ui->tableViewGlassPar->setColumnHidden(0,true);
+    ui->tableViewGlassPar->setColumnWidth(1,80);
+    ui->tableViewGlassPar->setColumnWidth(2,60);
+    ui->tableViewGlassPar->setColumnWidth(3,50);
+    ui->tableViewGlassPar->setColumnWidth(4,60);
+
     modelPart = new ModelPart(this);
     ui->tableViewPart->setModel(modelPart);
     ui->tableViewPart->setColumnHidden(0,true);
@@ -110,6 +129,8 @@ MainWidget::MainWidget(QWidget *parent) :
 
     connect(mapper,SIGNAL(currentIndexChanged(int)),this,SLOT(refreshCont(int)));
 
+    connect(ui->tableViewGlass->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(refreshGlassData(QModelIndex)));
+
     connect(ui->pushButtonUpd,SIGNAL(clicked(bool)),this,SLOT(updPart()));
     connect(ui->comboBoxOnly,SIGNAL(currentIndexChanged(QString)),this,SLOT(updPart()));
     connect(ui->comboBoxOnly,SIGNAL(currentTextChanged(QString)),this,SLOT(updPartFlf(QString)));
@@ -120,6 +141,13 @@ MainWidget::MainWidget(QWidget *parent) :
 MainWidget::~MainWidget()
 {
     delete ui;
+}
+
+int MainWidget::currentIdPart()
+{
+    QModelIndex indp=ui->tableViewPart->model()->index(mapper->currentIndex(),0);
+    QVariant val=ui->tableViewPart->model()->data(indp,Qt::EditRole);
+    return val.isNull()? 0 : val.toInt();
 }
 
 void MainWidget::updPart()
@@ -151,6 +179,7 @@ void MainWidget::refreshCont(int ind)
     modelRab->refresh(id_part);
     modelMix->refresh(id_part);
     modelGlass->refresh(id_part);
+    ui->tableViewGlass->setCurrentIndex(ui->tableViewGlass->model()->index(0,1));
 }
 
 void MainWidget::loadChem()
@@ -167,4 +196,14 @@ void MainWidget::loadChem()
         }
     }
     modelChem->select();
+}
+
+void MainWidget::refreshGlassData(QModelIndex index)
+{
+    QVariant id_l=ui->tableViewGlass->model()->data(ui->tableViewGlass->model()->index(index.row(),3),Qt::EditRole);
+    int id_load = id_l.isNull()? -1 : id_l.toInt();
+    modelConsStatData->refresh(id_load);
+    modelConsStatPar->refresh(id_load,currentIdPart());
+    ui->tableViewGlassCont->resizeColumnsToContents();
+    ui->tableViewGlassPar->resizeColumnsToContents();
 }

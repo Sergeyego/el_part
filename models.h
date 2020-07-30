@@ -4,6 +4,7 @@
 #include <QObject>
 #include "db/dbtablemodel.h"
 #include "rels.h"
+#include "modelro.h"
 
 class ModelPart : public DbTableModel
 {
@@ -81,5 +82,28 @@ public:
 private:
     DbRelation *relConsLoad;
     QString relQuery(int id_part);
+};
+
+class ModelConsStatData : public ModelRo
+{
+    Q_OBJECT
+public:
+    ModelConsStatData(QObject *parent);
+    void refresh(int id_load);
+    QVariant data(const QModelIndex &item, int role) const;
+private:
+    QMultiMap <int,QString> inPar;
+    int current_id_load;
+private slots:
+    void refreshInPar();
+};
+
+class ModelConsStatPar : public ModelRo
+{
+    Q_OBJECT
+public:
+    ModelConsStatPar(QObject *parent);
+    QVariant data(const QModelIndex &item, int role) const;
+    void refresh(int id_load, int id_part);
 };
 #endif // MODELS_H

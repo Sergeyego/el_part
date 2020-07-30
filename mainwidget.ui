@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>750</height>
+    <width>1022</width>
+    <height>748</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -106,7 +106,14 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEditPart"/>
+          <widget class="QLineEdit" name="lineEditPart">
+           <property name="maximumSize">
+            <size>
+             <width>170</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item row="0" column="2" colspan="2">
           <widget class="QLabel" name="label_9">
@@ -125,26 +132,19 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="4">
+          <widget class="QComboBox" name="comboBoxMark"/>
+         </item>
          <item row="0" column="6">
           <widget class="QComboBox" name="comboBoxSrc"/>
          </item>
-         <item row="1" column="4">
-          <widget class="QComboBox" name="comboBoxMark"/>
+         <item row="1" column="6">
+          <widget class="QLineEdit" name="lineEditDiam"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Рецепт.</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="6">
-          <widget class="QLineEdit" name="lineEditDiam"/>
-         </item>
-         <item row="1" column="5">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Диам.</string>
            </property>
           </widget>
          </item>
@@ -156,6 +156,29 @@
              <height>0</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>170</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Диам.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="comboBoxProv">
+           <property name="maximumSize">
+            <size>
+             <width>170</width>
+             <height>16777215</height>
+            </size>
+           </property>
           </widget>
          </item>
          <item row="1" column="2" colspan="2">
@@ -165,8 +188,8 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="comboBoxProv"/>
+         <item row="2" column="6">
+          <widget class="QLineEdit" name="lineEditKvo"/>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_10">
@@ -182,8 +205,8 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="6">
-          <widget class="QLineEdit" name="lineEditKvo"/>
+         <item row="2" column="4">
+          <widget class="QLineEdit" name="lineEditPartProv"/>
          </item>
          <item row="2" column="2" colspan="2">
           <widget class="QLabel" name="label_28">
@@ -192,21 +215,37 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="4">
-          <widget class="QLineEdit" name="lineEditPartProv"/>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Прим.</string>
+           </property>
+          </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="DbViewer" name="tableViewGlass">
-           <property name="minimumSize">
+         <item row="3" column="1">
+          <widget class="QPlainTextEdit" name="plainTextEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
             <size>
-             <width>450</width>
-             <height>0</height>
+             <width>170</width>
+             <height>80</height>
             </size>
            </property>
+          </widget>
+         </item>
+         <item row="3" column="2" colspan="5">
+          <widget class="DbViewer" name="tableViewGlass">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -215,65 +254,12 @@
            </property>
           </widget>
          </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="QTableView" name="tableViewGlassCont">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>80</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
         </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_12">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Примечание</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPlainTextEdit" name="plainTextEdit">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>150</width>
-               <height>80</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <widget class="QLabel" name="label_14">
              <property name="sizePolicy">
@@ -282,13 +268,64 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>Параметры стекла</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QTableView" name="tableViewGlassPar">
+            <widget class="DbViewer" name="tableViewGlassCont">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>110</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>230</width>
+               <height>110</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_13">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Измерения</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="DbViewer" name="tableViewGlassPar">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -297,16 +334,24 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>250</width>
-               <height>0</height>
+               <width>0</width>
+               <height>110</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>80</height>
+               <height>110</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
             </widget>
            </item>
           </layout>
@@ -323,13 +368,14 @@
            <item row="3" column="0">
             <widget class="QLabel" name="label_18">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>% сухой остат.</string>
+              <string>% сухой
+ остат.</string>
              </property>
             </widget>
            </item>
@@ -343,7 +389,7 @@
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>70</width>
                <height>16777215</height>
               </size>
              </property>
@@ -359,7 +405,7 @@
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>7</width>
                <height>16777215</height>
               </size>
              </property>
@@ -368,7 +414,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_15">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -381,7 +427,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_16">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -401,7 +447,7 @@
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>70</width>
                <height>16777215</height>
               </size>
              </property>
@@ -410,13 +456,14 @@
            <item row="2" column="0">
             <widget class="QLabel" name="label_17">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>% сод. в обмаз.</string>
+              <string>% сод. 
+в обмаз.</string>
              </property>
             </widget>
            </item>
@@ -430,7 +477,7 @@
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>70</width>
                <height>16777215</height>
               </size>
              </property>
@@ -730,9 +777,6 @@
   <tabstop>comboBoxRcp</tabstop>
   <tabstop>comboBoxMark</tabstop>
   <tabstop>lineEditDiam</tabstop>
-  <tabstop>tableViewGlass</tabstop>
-  <tabstop>tableViewGlassCont</tabstop>
-  <tabstop>plainTextEdit</tabstop>
   <tabstop>tableViewGlassPar</tabstop>
   <tabstop>toolButtonCopyPar</tabstop>
   <tabstop>lineEditPlot</tabstop>
