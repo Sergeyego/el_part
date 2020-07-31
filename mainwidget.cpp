@@ -262,7 +262,7 @@ void MainWidget::insertProvol(int markIndex)
 void MainWidget::copyPar()
 {
     if (modelConsStatPar->rowCount()){
-        int n=QMessageBox::question(this,tr("Подтвердите действия"),tr("Скопировать значения?"),QMessageBox::Yes,QMessageBox::No);
+        int n=QMessageBox::question(this,QString::fromUtf8("Подтвердите действия"),QString::fromUtf8("Скопировать значения?"),QMessageBox::Yes,QMessageBox::No);
         if (n==QMessageBox::Yes){
             for (int i=0; i<modelConsStatPar->rowCount(); i++){
                 int id_par=modelConsStatPar->data(modelConsStatPar->index(i,0),Qt::EditRole).toInt();

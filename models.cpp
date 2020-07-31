@@ -192,9 +192,9 @@ ModelChemSrc::ModelChemSrc(QObject *parent) : ModelChem("parti_chem",parent)
 {
     addColumn("id","id");
     addColumn("id_part","id_part");
-    addColumn("id_chem",tr("Элем."),Rels::instance()->relChem);
-    addColumn("kvo",tr("Сод., %"));
-    addColumn("dt_cre",tr("Дата"));
+    addColumn("id_chem",QString::fromUtf8("Элем."),Rels::instance()->relChem);
+    addColumn("kvo",QString::fromUtf8("Сод., %"));
+    addColumn("dt_cre",QString::fromUtf8("Дата"));
     setValidator(3,new QDoubleValidator(0,100,3,this));
     setSort(tablename+".id_chem, "+tablename+".dt_cre");
     flt=tableName+".id_part";
@@ -228,10 +228,10 @@ QList <int> ModelChemSrc::ids()
 ModelMechSrc::ModelMechSrc(QObject *parent) : ModelChem("parti_mech",parent)
 {
     addColumn("id_part","id_part");
-    addColumn("id_mech",tr("Параметр"),Rels::instance()->relMech);
-    addColumn("kvo",tr("Значение"));
+    addColumn("id_mech",QString::fromUtf8("Параметр"),Rels::instance()->relMech);
+    addColumn("kvo",QString::fromUtf8("Значение"));
     setSort("parti_mech.id_mech");
-    setValidator(2,new QDoubleValidator(-1000000000,1000000000,2,this));
+    setDecimals(2,2);
     flt=tableName+".id_part";
     colIdPart=0;
     colIdChem=1;
