@@ -285,7 +285,7 @@ void MainWidget::insertChemSamp()
     if (modelChem->isEmpty()){
         QList <int> l = modelChem->ids();
         for (int key:l){
-            modelChem->addChem(key,NULL);
+            modelChem->addChem(key,0.0);
         }
         modelChem->select();
         modelPart->refreshState();
