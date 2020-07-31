@@ -214,7 +214,7 @@ void MainWidget::loadChem()
     DialogLoadChem d;
     if (d.exec()==QDialog::Accepted){
         QList <int> l = modelChem->ids();
-        for (int key:l){
+        foreach (int key,l){
             QString chem=Rels::instance()->relChem->data(QString::number(key)).toString();
             double val=d.chemVal(chem);
             if (val>0){
@@ -284,7 +284,7 @@ void MainWidget::insertChemSamp()
 {
     if (modelChem->isEmpty()){
         QList <int> l = modelChem->ids();
-        for (int key:l){
+        foreach (int key,l){
             modelChem->addChem(key,0.0);
         }
         modelChem->select();
