@@ -37,7 +37,6 @@ private:
 
 private slots:
     void updPart();
-    void updPartFlf(QString s);
     void refreshCont(int ind);
     void loadChem();
     void refreshGlassData(QModelIndex index);

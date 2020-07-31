@@ -134,8 +134,8 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->tableViewGlass->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(refreshGlassData(QModelIndex)));
 
     connect(ui->pushButtonUpd,SIGNAL(clicked(bool)),this,SLOT(updPart()));
-    connect(ui->comboBoxOnly,SIGNAL(currentIndexChanged(QString)),this,SLOT(updPart()));
-    connect(ui->comboBoxOnly,SIGNAL(currentTextChanged(QString)),this,SLOT(updPartFlf(QString)));
+    connect(ui->comboBoxOnly,SIGNAL(currentIndexChanged(int)),this,SLOT(updPart()));
+    connect(ui->comboBoxOnly->lineEdit(),SIGNAL(textChanged(QString)),this,SLOT(updPart()));
     connect(ui->toolButtonChem,SIGNAL(clicked(bool)),this,SLOT(loadChem()));
     connect(modelChem,SIGNAL(sigUpd()),modelPart,SLOT(refreshState()));
     connect(modelChem,SIGNAL(sigUpd()),this,SLOT(lockChemSampCh()));
@@ -180,19 +180,12 @@ void MainWidget::updPart()
 {
     int ind=ui->comboBoxOnly->currentIndex();
     int id_el=-1;
-    if (ind>=0){
+    if (/*ind>=0*/!ui->comboBoxOnly->currentText().isEmpty()){
         id_el=ui->comboBoxOnly->model()->data(ui->comboBoxOnly->model()->index(ind,0),Qt::EditRole).toInt();
     }
     modelPart->refresh(ui->dateEditBeg->date(),ui->dateEditEnd->date(),id_el);
     if (sender()==ui->pushButtonUpd){
         modelMix->refreshRel(ui->dateEditBeg->date().addYears(-1),ui->dateEditEnd->date().addYears(1));
-    }
-}
-
-void MainWidget::updPartFlf(QString s)
-{
-    if (s.isEmpty()){
-        ui->comboBoxOnly->setCurrentIndex(-1);
     }
 }
 
