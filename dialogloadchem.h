@@ -10,6 +10,7 @@
 #include <QXmlStreamReader>
 #include <QFile>
 #include <math.h>
+#include <QTimer>
 
 namespace Ui {
 class DialogLoadChem;
@@ -35,6 +36,7 @@ private:
 private slots:
     void setCurrentDir();
     void setCurrentDir(QString path);
+    void updDir();
     void parceXml(QModelIndex index);
 };
 

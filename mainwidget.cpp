@@ -281,6 +281,7 @@ void MainWidget::insertChemSamp()
             modelChem->addChem(key,0.0);
         }
         modelChem->select();
+        lockChemSampCh();
         modelPart->refreshState();
     }
 }

@@ -25,7 +25,8 @@ DialogLoadChem::DialogLoadChem(QWidget *parent) :
     if (dir.isEmpty()){
         dir=QDir::homePath();
     }
-    setCurrentDir(dir);
+    ui->lineEditDir->setText(dir);
+    QTimer::singleShot(100,this,SLOT(updDir()));
 
     connect(ui->toolButtonDir,SIGNAL(clicked(bool)),this,SLOT(setCurrentDir()));
     connect(ui->tableView->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),this,SLOT(parceXml(QModelIndex)));
@@ -138,6 +139,11 @@ void DialogLoadChem::setCurrentDir(QString path)
     QModelIndex ind=fileModel->setRootPath(path);
     ui->tableView->setRootIndex(ind);
     ui->lineEditDir->setText(path);
+}
+
+void DialogLoadChem::updDir()
+{
+    setCurrentDir(ui->lineEditDir->text());
 }
 
 void DialogLoadChem::parceXml(QModelIndex index)
