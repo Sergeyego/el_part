@@ -344,7 +344,7 @@ void ModelGlass::refresh(int id_part)
 
 QString ModelGlass::relQuery(int id_part)
 {
-    return QString("select st.id, ('№'||c.num||'; загр. '||to_char(l.dat_load,'dd.MM.yy')||'; '||COALESCE(mk.nam, ms.nam)||'; парт.'|| l.parti_glass) as info "
+    return QString::fromUtf8("select st.id, ('№'||c.num||'; загр. '||to_char(l.dat_load,'dd.MM.yy')||'; '||COALESCE(mk.nam, ms.nam)||'; парт.'|| l.parti_glass) as info "
                    "from ( "
                    "select l.id from glass_cons_load as l "
                    "where l.dat_load=(select max(ll.dat_load) from glass_cons_load as ll where ll.dat_load<= (select dat_part-1 from parti where id = %1 ) and ll.id_cons=l.id_cons) "
