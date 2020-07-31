@@ -6,6 +6,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
+    loadSettings();
 
     ui->dateEditBeg->setDate(QDate::currentDate().addDays(-QDate::currentDate().dayOfYear()+1));
     ui->dateEditEnd->setDate(QDate(QDate::currentDate().year(),12,31));
@@ -122,6 +123,7 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addEmptyLock(ui->tableViewMech);
     mapper->addEmptyLock(ui->toolButtonCopyPar);
     mapper->addEmptyLock(ui->toolButtonChem);
+    mapper->addEmptyLock(ui->toolButtonSamp);
 
     ui->comboBoxOnly->setModel(Rels::instance()->relMark->model());
     ui->comboBoxOnly->setModelColumn(1);
@@ -135,11 +137,21 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->comboBoxOnly,SIGNAL(currentIndexChanged(QString)),this,SLOT(updPart()));
     connect(ui->comboBoxOnly,SIGNAL(currentTextChanged(QString)),this,SLOT(updPartFlf(QString)));
     connect(ui->toolButtonChem,SIGNAL(clicked(bool)),this,SLOT(loadChem()));
+    connect(modelChem,SIGNAL(sigUpd()),modelPart,SLOT(refreshState()));
+    connect(modelChem,SIGNAL(sigUpd()),this,SLOT(lockChemSampCh()));
+    connect(modelMech,SIGNAL(sigUpd()),modelPart,SLOT(refreshState()));
+    connect(ui->comboBoxRcp,SIGNAL(currentIndexChanged(int)),this,SLOT(insertMark(int)));
+    connect(ui->comboBoxMark,SIGNAL(currentIndexChanged(int)),this,SLOT(insertProvol(int)));
+    connect(ui->toolButtonCopyPar,SIGNAL(clicked(bool)),this,SLOT(copyPar()));
+    connect(ui->toolButtonSamp,SIGNAL(clicked(bool)),this,SLOT(insertChemSamp()));
+    connect(mapper,SIGNAL(lockChanged(bool)),this,SLOT(lockChangedMap(bool)));
+
     updPart();
 }
 
 MainWidget::~MainWidget()
 {
+    saveSettings();
     delete ui;
 }
 
@@ -148,6 +160,20 @@ int MainWidget::currentIdPart()
     QModelIndex indp=ui->tableViewPart->model()->index(mapper->currentIndex(),0);
     QVariant val=ui->tableViewPart->model()->data(indp,Qt::EditRole);
     return val.isNull()? 0 : val.toInt();
+}
+
+void MainWidget::loadSettings()
+{
+    QSettings settings("szsm", QApplication::applicationName());
+    this->restoreGeometry(settings.value("main_geometry").toByteArray());
+    this->ui->splitter->restoreState(settings.value("main_splitter_width").toByteArray());
+}
+
+void MainWidget::saveSettings()
+{
+    QSettings settings("szsm", QApplication::applicationName());
+    settings.setValue("main_geometry", this->saveGeometry());
+    settings.setValue("main_splitter_width",ui->splitter->saveState());
 }
 
 void MainWidget::updPart()
@@ -180,6 +206,7 @@ void MainWidget::refreshCont(int ind)
     modelMix->refresh(id_part);
     modelGlass->refresh(id_part);
     ui->tableViewGlass->setCurrentIndex(ui->tableViewGlass->model()->index(0,1));
+    lockChemSampCh();
 }
 
 void MainWidget::loadChem()
@@ -196,6 +223,7 @@ void MainWidget::loadChem()
         }
     }
     modelChem->select();
+    modelPart->refreshState();
 }
 
 void MainWidget::refreshGlassData(QModelIndex index)
@@ -206,4 +234,73 @@ void MainWidget::refreshGlassData(QModelIndex index)
     modelConsStatPar->refresh(id_load,currentIdPart());
     ui->tableViewGlassCont->resizeColumnsToContents();
     ui->tableViewGlassPar->resizeColumnsToContents();
+    ui->toolButtonCopyPar->setEnabled(modelConsStatPar->rowCount()>0);
+}
+
+void MainWidget::insertMark(int rcpIndex)
+{
+    if (modelPart->isAdd()){
+        QModelIndex ind=ui->comboBoxRcp->model()->index(rcpIndex,3);
+        int id_el=ui->comboBoxRcp->model()->data(ind,Qt::EditRole).toInt();
+        QModelIndex elIndex=modelPart->index(mapper->currentIndex(),6);
+        modelPart->setData(elIndex,id_el,Qt::EditRole);
+    }
+}
+
+void MainWidget::insertProvol(int markIndex)
+{
+    if (modelPart->isAdd()){
+        if (!ui->comboBoxMark->currentText().isEmpty()){
+            QModelIndex ind=ui->comboBoxMark->model()->index(markIndex,2);
+            int id_pr=ui->comboBoxMark->model()->data(ind,Qt::EditRole).toInt();
+            QModelIndex prIndex=modelPart->index(mapper->currentIndex(),8);
+            modelPart->setData(prIndex,id_pr,Qt::EditRole);
+        }
+    }
+}
+
+void MainWidget::copyPar()
+{
+    if (modelConsStatPar->rowCount()){
+        int n=QMessageBox::question(this,tr("Подтвердите действия"),tr("Скопировать значения?"),QMessageBox::Yes,QMessageBox::No);
+        if (n==QMessageBox::Yes){
+            for (int i=0; i<modelConsStatPar->rowCount(); i++){
+                int id_par=modelConsStatPar->data(modelConsStatPar->index(i,0),Qt::EditRole).toInt();
+                double val=modelConsStatPar->data(modelConsStatPar->index(i,2),Qt::EditRole).toDouble();
+                if (id_par==2){
+                    QModelIndex plIndex=modelPart->index(mapper->currentIndex(),10);
+                    modelPart->setData(plIndex,val,Qt::EditRole);
+                } else if (id_par==1){
+                    QModelIndex vIndex=modelPart->index(mapper->currentIndex(),11);
+                    modelPart->setData(vIndex,val,Qt::EditRole);
+                }
+            }
+            modelPart->submit();
+        }
+    }
+}
+
+void MainWidget::insertChemSamp()
+{
+    if (modelChem->isEmpty()){
+        QList <int> l = modelChem->ids();
+        for (int key:l){
+            modelChem->addChem(key,NULL);
+        }
+        modelChem->select();
+        modelPart->refreshState();
+    }
+}
+
+void MainWidget::lockChemSampCh()
+{
+    ui->toolButtonSamp->setEnabled(modelChem->isEmpty());
+}
+
+void MainWidget::lockChangedMap(bool lock)
+{
+    if (!lock){
+        lockChemSampCh();
+        ui->toolButtonCopyPar->setEnabled(modelConsStatPar->rowCount()>0);
+    }
 }

@@ -128,6 +128,7 @@ public:
     void setSuffix(QString s);
     bool isAdd();
     bool isEdt();
+    bool isEmpty();
     virtual bool insertRow(int row, const QModelIndex &parent=QModelIndex());
     DbRelation *relation(int column) const;
     QVariant::Type columnType(int column) const;
@@ -138,6 +139,7 @@ public:
     void setDefaultValue(int column, QVariant value);
     void setColumnFlags(int column, Qt::ItemFlags flags);
     QVariant defaultValue(int column);
+    bool setDecimals(int column, int dec);
 
 protected:
     QString tableName;

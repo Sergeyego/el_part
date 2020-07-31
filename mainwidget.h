@@ -6,6 +6,7 @@
 #include "db/dbmapper.h"
 #include "dialogloadchem.h"
 #include <QSqlQuery>
+#include <QSettings>
 
 namespace Ui {
 class MainWidget;
@@ -31,6 +32,8 @@ private:
     ModelConsStatData *modelConsStatData;
     ModelConsStatPar *modelConsStatPar;
     int currentIdPart();
+    void loadSettings();
+    void saveSettings();
 
 private slots:
     void updPart();
@@ -38,6 +41,12 @@ private slots:
     void refreshCont(int ind);
     void loadChem();
     void refreshGlassData(QModelIndex index);
+    void insertMark(int rcpIndex);
+    void insertProvol(int markIndex);
+    void copyPar();
+    void insertChemSamp();
+    void lockChemSampCh();
+    void lockChangedMap(bool lock);
 };
 
 #endif // MAINWIDGET_H

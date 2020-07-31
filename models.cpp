@@ -25,17 +25,69 @@ ModelPart::ModelPart(QObject *parent) : DbTableModel("parti",parent)
     addColumn("mas_dry",QString::fromUtf8("Масса шихты"));
     addColumn("mas_lqgl",QString::fromUtf8("Масса ж.стекла"));
 
-    setSort("parti.dat_part, parti.n_s");
+    setDecimals(10,3);
+    setDecimals(12,2);
+    setDecimals(13,2);
+    setDecimals(14,2);
+    setDecimals(17,2);
+    setDecimals(18,2);
+
+    setSort("parti.n_s, parti.dat_part");
+}
+
+QVariant ModelPart::data(const QModelIndex &index, int role) const
+{
+    if((role == Qt::BackgroundColorRole)) {
+        int area = colorState.value(data(this->index(index.row(),0),Qt::EditRole).toInt());
+        if(area == 1) return QVariant(QColor(255,170,170)); else
+            if(area == 2) return QVariant(QColor(170,255,170)); else
+                if(area == 3) return QVariant(QColor(Qt::yellow)); else
+                    return DbTableModel::data(index,role);
+    } else return DbTableModel::data(index,role);
 }
 
 void ModelPart::refresh(const QDate &beg, const QDate &end, int id_el)
 {
+    dBeg=beg;
+    dEnd=end;
     QString f="parti.dat_part between '"+beg.toString("yyyy-MM-dd")+"' and '"+end.toString("yyyy-MM-dd")+"'";
     if (id_el>=0){
         f.append(" and parti.id_el = "+QString::number(id_el));
     }
     setFilter(f);
+    refreshState();
     select();
+}
+
+bool ModelPart::insertRow(int row, const QModelIndex &parent)
+{
+    int old_num=0;
+    if (rowCount()>0) old_num=this->data(this->index(rowCount()-1,1),Qt::EditRole).toInt();
+    setDefaultValue(1,QString("%1").arg((old_num+1),4,'d',0,QChar('0')));
+    setDefaultValue(2,QDate::currentDate());
+    return DbTableModel::insertRow(row,parent);
+}
+
+void ModelPart::refreshState()
+{
+    QSqlQuery query;
+    query.prepare("select parti.id, "
+                  "(select case when exists(select id from parti_chem where id_part=parti.id) "
+                  "then 1 else 0 end "
+                  "+ "
+                  "case when exists(select id from parti_mech where id_part=parti.id) "
+                  "then 2 else 0 end "
+                  "as r) from parti where parti.dat_part between :d1 and :d2");
+    query.bindValue(":d1",dBeg);
+    query.bindValue(":d2",dEnd);
+    if (query.exec()){
+        colorState.clear();
+        while (query.next()){
+            colorState[query.value(0).toInt()]=query.value(1).toInt();
+        }
+    } else {
+        QMessageBox::critical(NULL,tr("Error"),query.lastError().text(),QMessageBox::Ok);
+    }
 }
 
 ModelChem::ModelChem(QString tname, QObject *parent) : DbTableModel(tname,parent), tablename(tname)
@@ -210,6 +262,12 @@ ModelRab::ModelRab(QObject *parent) : DbTableModel("part_prod",parent)
     addColumn("garb",QString::fromUtf8("Отх.мус."));
 
     setSort("part_prod.dat");
+}
+
+bool ModelRab::insertRow(int row, const QModelIndex &parent)
+{
+    setDefaultValue(2,QDate::currentDate());
+    return DbTableModel::insertRow(row,parent);
 }
 
 void ModelRab::refresh(int id_part)

@@ -83,6 +83,7 @@ void DbMapper::lock(bool val)
     for (int i=0; i<lock1.size(); i++) lock1[i]->setEnabled(!val);
     for (int i=0; i<lock2.size(); i++) lock2[i]->setEnabled(val);
     for (int i=0; i<lockEmpty.size(); i++) lockEmpty[i]->setEnabled(!val);
+    emit lockChanged(val);
 }
 
 void DbMapper::checkEmpty()
@@ -93,6 +94,7 @@ void DbMapper::checkEmpty()
         for (int i=0; i<lockEmpty.size(); i++) lockEmpty[i]->setEnabled(!val);
         cmdEdt->setEnabled(!val);
         cmdDel->setEnabled(!val);
+        emit lockChanged(val);
     }
 }
 

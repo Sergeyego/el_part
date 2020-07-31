@@ -11,7 +11,15 @@ class ModelPart : public DbTableModel
     Q_OBJECT
 public:
     ModelPart(QObject *parent);
+    QVariant data(const QModelIndex &index, int role) const;
     void refresh(const QDate &beg, const QDate &end, int id_el);
+    bool insertRow(int row, const QModelIndex &parent);
+public slots:
+    void refreshState();
+private:
+    QDate dBeg;
+    QDate dEnd;
+    QMap <int,int> colorState;
 };
 
 struct range {
@@ -58,6 +66,7 @@ class ModelRab : public DbTableModel
 {
 public:
     ModelRab(QObject *parent=0);
+    bool insertRow(int row, const QModelIndex &parent);
     void refresh(int id_part);
 private:
     DbRelation *relRab;

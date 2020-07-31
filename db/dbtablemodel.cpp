@@ -163,11 +163,13 @@ bool DbTableModel::removeRow(int row, const QModelIndex& parent)
             modelData->delRow(row);
             endRemoveRows();
             ok=true;
-            emit sigUpd();
         }
     }
-    if (ok && modelData->rowCount()<1) {
-        this->insertRow(0);
+    if (ok){
+        if (modelData->rowCount()<1) {
+            this->insertRow(0);
+        }
+        emit sigUpd();
     }
     return ok;
 }
@@ -195,6 +197,11 @@ bool DbTableModel::isAdd()
 bool DbTableModel::isEdt()
 {
     return (editor->isEdt());
+}
+
+bool DbTableModel::isEmpty()
+{
+    return (rowCount()==1 && isAdd()) || (rowCount()<1);
 }
 
 bool DbTableModel::insertRow(int /*row*/, const QModelIndex& /*parent*/)
@@ -257,6 +264,20 @@ QVariant DbTableModel::defaultValue(int column)
     return defaultTmpRow[column];
 }
 
+bool DbTableModel::setDecimals(int column, int dec)
+{
+    bool ok=false;
+    QValidator *validator=modelData->column(column)->validator;
+    if (validator){
+        QDoubleValidator *doublevalidator = qobject_cast<QDoubleValidator*>(validator);
+        if (doublevalidator) {
+            ok=true;
+            doublevalidator->setDecimals(dec);
+        }
+    }
+    return ok;
+}
+
 bool DbTableModel::insertDb()
 {
     QSqlQuery query;
@@ -302,7 +323,6 @@ bool DbTableModel::insertDb()
         int r = rowCount()-1;
         emit dataChanged(this->index(r,0),this->index(r,editor->currentPos()));
         emit headerDataChanged(Qt::Vertical,r,r);
-        emit sigUpd();
     }
     return ok;
 }
@@ -354,7 +374,6 @@ bool DbTableModel::updateDb()
     } else {
         emit dataChanged(this->index(r,0),this->index(r,editor->currentPos()));
         emit headerDataChanged(Qt::Vertical,r,r);
-        emit sigUpd();
     }
     return ok;
 }
@@ -453,11 +472,13 @@ bool DbTableModel::submit()
         if (editor->isAdd()){
             if (insertDb()) {
                 editor->submit();
+                emit sigUpd();
                 //qDebug()<<"SUBMIT_ADD";
             }
         } else if (!editor->isAdd()){
             if (updateDb()){
                 editor->submit();
+                emit sigUpd();
                 //qDebug()<<"SUBMIT_EDT";
             }
         }
