@@ -46,6 +46,7 @@ private slots:
     void insertChemSamp();
     void lockChemSampCh();
     void lockChangedMap(bool lock);
+    void setCurrentChemDev(int index);
 };
 
 #endif // MAINWIDGET_H

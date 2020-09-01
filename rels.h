@@ -18,6 +18,7 @@ public:
     DbRelation *relChem;
     DbRelation *relMech;
     DbRelation *relPress;
+    DbRelation *relChemDev;
 
 protected:
     explicit Rels(QObject *parent = 0);

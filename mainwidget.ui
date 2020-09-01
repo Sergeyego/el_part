@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1020</width>
-    <height>746</height>
+    <height>764</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -702,6 +702,16 @@
             </widget>
            </item>
            <item>
+            <widget class="QLabel" name="label_33">
+             <property name="text">
+              <string>Прибор:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBoxChemDev"/>
+           </item>
+           <item>
             <widget class="QLabel" name="label_32">
              <property name="text">
               <string>Шаб.:</string>
@@ -742,7 +752,14 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="DbViewer" name="tableViewChem"/>
+            <widget class="DbViewer" name="tableViewChem">
+             <property name="minimumSize">
+              <size>
+               <width>380</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

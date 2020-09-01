@@ -12,13 +12,21 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->dateEditEnd->setDate(QDate(QDate::currentDate().year(),12,31));
     ui->pushButtonUpd->setIcon(this->style()->standardIcon(QStyle::SP_BrowserReload));
 
+    ui->comboBoxChemDev->setModel(Rels::instance()->relChemDev->model());
+    ui->comboBoxChemDev->setModelColumn(1);
+
     modelChem = new ModelChemSrc(this);
     ui->tableViewChem->setModel(modelChem);
     ui->tableViewChem->setColumnHidden(0,true);
     ui->tableViewChem->setColumnHidden(1,true);
     ui->tableViewChem->setColumnWidth(2,80);
     ui->tableViewChem->setColumnWidth(3,70);
-    ui->tableViewChem->setColumnWidth(4,110);
+    ui->tableViewChem->setColumnWidth(4,70);
+    ui->tableViewChem->setColumnWidth(5,110);
+
+    if (ui->comboBoxChemDev->model()->rowCount()){
+        setCurrentChemDev(ui->comboBoxChemDev->currentIndex());
+    }
 
     modelMech = new ModelMechSrc(this);
     ui->tableViewMech->setModel(modelMech);
@@ -145,6 +153,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->toolButtonCopyPar,SIGNAL(clicked(bool)),this,SLOT(copyPar()));
     connect(ui->toolButtonSamp,SIGNAL(clicked(bool)),this,SLOT(insertChemSamp()));
     connect(mapper,SIGNAL(lockChanged(bool)),this,SLOT(lockChangedMap(bool)));
+    connect(ui->comboBoxChemDev,SIGNAL(currentIndexChanged(int)),this,SLOT(setCurrentChemDev(int)));
 
     updPart();
 }
@@ -211,7 +220,7 @@ void MainWidget::loadChem()
             QString chem=Rels::instance()->relChem->data(QString::number(key)).toString();
             double val=d.chemVal(chem);
             if (val>0){
-                modelChem->addChem(key,val);
+                modelChem->addChem(key,val,2);
             }
         }
     }
@@ -276,9 +285,10 @@ void MainWidget::copyPar()
 void MainWidget::insertChemSamp()
 {
     if (modelChem->isEmpty()){
+        int id_dev=ui->comboBoxChemDev->model()->data(ui->comboBoxChemDev->model()->index(ui->comboBoxChemDev->currentIndex(),0),Qt::EditRole).toInt();
         QList <int> l = modelChem->ids();
         foreach (int key,l){
-            modelChem->addChem(key,0.0);
+            modelChem->addChem(key,0.0,id_dev);
         }
         modelChem->select();
         lockChemSampCh();
@@ -297,4 +307,11 @@ void MainWidget::lockChangedMap(bool lock)
         lockChemSampCh();
         ui->toolButtonCopyPar->setEnabled(modelConsStatPar->rowCount()>0);
     }
+}
+
+void MainWidget::setCurrentChemDev(int index)
+{
+    int id_dev=ui->comboBoxChemDev->model()->data(ui->comboBoxChemDev->model()->index(index,0),Qt::EditRole).toInt();
+    modelChem->setDefaultValue(4,id_dev);
+    modelChem->select();
 }

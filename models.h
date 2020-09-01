@@ -52,7 +52,7 @@ class ModelChemSrc : public ModelChem
 {
 public:
     ModelChemSrc(QObject *parent=0);
-    bool addChem(int id_chem, double val);
+    bool addChem(int id_chem, double val, int id_dev);
     QList <int> ids();
 };
 

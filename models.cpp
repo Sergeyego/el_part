@@ -194,25 +194,27 @@ ModelChemSrc::ModelChemSrc(QObject *parent) : ModelChem("parti_chem",parent)
     addColumn("id_part","id_part");
     addColumn("id_chem",QString::fromUtf8("Элем."),Rels::instance()->relChem);
     addColumn("kvo",QString::fromUtf8("Сод., %"));
+    addColumn("id_dev",QString::fromUtf8("Прибор"),Rels::instance()->relChemDev);
     addColumn("dt_cre",QString::fromUtf8("Дата"));
     setValidator(3,new QDoubleValidator(0,100,3,this));
     setSort(tablename+".id_chem, "+tablename+".dt_cre");
     flt=tableName+".id_part";
-    setColumnFlags(4,Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    setColumnFlags(5,Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     colIdPart=1;
     colIdChem=2;
     colVal=3;
     tuQuery="select c.id_chem, c.min, c.max from chem_tu as c where c.id_el = (select p.id_el from parti as p where p.id = :id )";
 }
 
-bool ModelChemSrc::addChem(int id_chem, double val)
+bool ModelChemSrc::addChem(int id_chem, double val, int id_dev)
 {
     int id_part=defaultValue(colIdPart).toInt();
     QSqlQuery query;
-    query.prepare("insert into parti_chem (id_part, id_chem, kvo) values (:id_part, :id_chem, :kvo)");
+    query.prepare("insert into parti_chem (id_part, id_chem, kvo, id_dev) values (:id_part, :id_chem, :kvo, :id_dev)");
     query.bindValue(":id_part",id_part);
     query.bindValue(":id_chem",id_chem);
     query.bindValue(":kvo",val);
+    query.bindValue(":id_dev",id_dev);
     bool ok=query.exec();
     if (!ok){
         QMessageBox::critical(NULL,"Error",query.lastError().text(),QMessageBox::Cancel);
