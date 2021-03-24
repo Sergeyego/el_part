@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1020</width>
+    <width>1024</width>
     <height>764</height>
    </rect>
   </property>
@@ -98,6 +98,13 @@
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="7">
+          <widget class="QLabel" name="label_34">
+           <property name="text">
+            <string>Носитель</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_7">
            <property name="text">
@@ -244,7 +251,10 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2" colspan="5">
+         <item row="0" column="8">
+          <widget class="QComboBox" name="comboBoxPack"/>
+         </item>
+         <item row="3" column="2" colspan="7">
           <widget class="DbViewer" name="tableViewGlass">
            <property name="maximumSize">
             <size>
@@ -253,6 +263,16 @@
             </size>
            </property>
           </widget>
+         </item>
+         <item row="1" column="7">
+          <widget class="QLabel" name="label_35">
+           <property name="text">
+            <string>Длина, мм</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="8">
+          <widget class="QComboBox" name="comboBoxLong"/>
          </item>
         </layout>
        </item>
@@ -826,13 +846,20 @@
   <tabstop>dateEditBeg</tabstop>
   <tabstop>dateEditEnd</tabstop>
   <tabstop>pushButtonUpd</tabstop>
-  <tabstop>comboBoxOnly</tabstop>
   <tabstop>lineEditPart</tabstop>
   <tabstop>dateEditPart</tabstop>
   <tabstop>comboBoxSrc</tabstop>
   <tabstop>comboBoxRcp</tabstop>
   <tabstop>comboBoxMark</tabstop>
   <tabstop>lineEditDiam</tabstop>
+  <tabstop>comboBoxProv</tabstop>
+  <tabstop>lineEditPartProv</tabstop>
+  <tabstop>lineEditKvo</tabstop>
+  <tabstop>comboBoxPack</tabstop>
+  <tabstop>comboBoxLong</tabstop>
+  <tabstop>plainTextEdit</tabstop>
+  <tabstop>tableViewGlass</tabstop>
+  <tabstop>tableViewGlassCont</tabstop>
   <tabstop>tableViewGlassPar</tabstop>
   <tabstop>toolButtonCopyPar</tabstop>
   <tabstop>lineEditPlot</tabstop>
@@ -840,6 +867,8 @@
   <tabstop>lineEditObm</tabstop>
   <tabstop>lineEditOst</tabstop>
   <tabstop>tableViewDoz</tabstop>
+  <tabstop>lineEditMasDry</tabstop>
+  <tabstop>lineEditMasGl</tabstop>
   <tabstop>tableViewPress</tabstop>
   <tabstop>lineEditKfmp</tabstop>
   <tabstop>lineEditDl</tabstop>
@@ -848,6 +877,10 @@
   <tabstop>lineEditDel</tabstop>
   <tabstop>tableViewChem</tabstop>
   <tabstop>tableViewMech</tabstop>
+  <tabstop>toolButtonChem</tabstop>
+  <tabstop>comboBoxChemDev</tabstop>
+  <tabstop>toolButtonSamp</tabstop>
+  <tabstop>comboBoxOnly</tabstop>
  </tabstops>
  <resources/>
  <connections/>

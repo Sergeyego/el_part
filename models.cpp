@@ -24,6 +24,8 @@ ModelPart::ModelPart(QObject *parent) : DbTableModel("parti",parent)
     addColumn("parti_prov",QString::fromUtf8("Партия пров."));
     addColumn("mas_dry",QString::fromUtf8("Масса шихты"));
     addColumn("mas_lqgl",QString::fromUtf8("Масса ж.стекла"));
+    addColumn("id_pack",QString::fromUtf8("Упаковка"),Rels::instance()->relPack);
+    addColumn("id_long",QString::fromUtf8("Длина"),Rels::instance()->relLong);
 
     setDecimals(10,3);
     setDecimals(12,2);

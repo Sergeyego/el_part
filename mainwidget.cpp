@@ -116,6 +116,8 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addMapping(ui->lineEditPartProv,19);
     mapper->addMapping(ui->lineEditMasDry,20);
     mapper->addMapping(ui->lineEditMasGl,21);
+    mapper->addMapping(ui->comboBoxPack,22);
+    mapper->addMapping(ui->comboBoxLong,23);
 
     mapper->setDefaultFocus(1);
     mapper->addLock(ui->dateEditBeg);
@@ -154,6 +156,7 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->toolButtonSamp,SIGNAL(clicked(bool)),this,SLOT(insertChemSamp()));
     connect(mapper,SIGNAL(lockChanged(bool)),this,SLOT(lockChangedMap(bool)));
     connect(ui->comboBoxChemDev,SIGNAL(currentIndexChanged(int)),this,SLOT(setCurrentChemDev(int)));
+    connect(ui->lineEditDiam,SIGNAL(editingFinished()),this,SLOT(setDefaultPack()));
 
     updPart();
 }
@@ -314,4 +317,19 @@ void MainWidget::setCurrentChemDev(int index)
     int id_dev=ui->comboBoxChemDev->model()->data(ui->comboBoxChemDev->model()->index(index,0),Qt::EditRole).toInt();
     modelChem->setDefaultValue(4,id_dev);
     modelChem->select();
+}
+
+void MainWidget::setDefaultPack()
+{
+    QSqlQuery query;
+    query.prepare("select id_pack_el_default, id_long_el_default from diam where diam=:d");
+    query.bindValue(":d",ui->lineEditDiam->text().toDouble());
+    if (query.exec()){
+        while (query.next()){
+            modelPart->setData(modelPart->index(mapper->currentIndex(),22),query.value(0).toInt(),Qt::EditRole);
+            modelPart->setData(modelPart->index(mapper->currentIndex(),23),query.value(1).toInt(),Qt::EditRole);
+        }
+    } else {
+        QMessageBox::critical(this,tr("Error"),query.lastError().text(),QMessageBox::Cancel);
+    }
 }
