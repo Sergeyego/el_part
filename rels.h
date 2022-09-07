@@ -21,6 +21,7 @@ public:
     DbRelation *relChemDev;
     DbRelation *relPack;
     DbRelation *relLong;
+    DbRelation *relVar;
 
 protected:
     explicit Rels(QObject *parent = 0);

@@ -118,6 +118,7 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addMapping(ui->lineEditMasGl,21);
     mapper->addMapping(ui->comboBoxPack,22);
     mapper->addMapping(ui->comboBoxLong,23);
+    mapper->addMapping(ui->comboBoxVar,24);
 
     mapper->setDefaultFocus(1);
     mapper->addLock(ui->dateEditBeg);

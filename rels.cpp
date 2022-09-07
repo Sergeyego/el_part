@@ -24,6 +24,7 @@ Rels::Rels(QObject *parent) : QObject(parent)
     relChemDev = new DbRelation(QString("select id, short from chem_dev order by short"),0,1,this);
     relPack = new DbRelation(QString("select id, pack_ed||'/'||pack_group from el_pack order by pack_ed"),0,1,this);
     relLong = new DbRelation(QString("select id, nam from el_long order by nam"),0,1,this);
+    relVar = new DbRelation(QString("select id, nam from elrtr_vars order by id"),0,1,this);
 
     relRcp->proxyModel()->setFilterKeyColumn(2);
     relRcp->proxyModel()->setFilterFixedString("1");
@@ -43,6 +44,7 @@ void Rels::refresh()
     relChemDev->refreshModel();
     relPack->refreshModel();
     relLong->refreshModel();
+    relVar->refreshModel();
 
     emit sigRefresh();
 }

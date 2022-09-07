@@ -26,6 +26,7 @@ ModelPart::ModelPart(QObject *parent) : DbTableModel("parti",parent)
     addColumn("mas_lqgl",QString::fromUtf8("Масса ж.стекла"));
     addColumn("id_pack",QString::fromUtf8("Упаковка"),Rels::instance()->relPack);
     addColumn("id_long",QString::fromUtf8("Длина"),Rels::instance()->relLong);
+    addColumn("id_var",QString::fromUtf8("Вариант"),Rels::instance()->relVar);
 
     setDecimals(10,3);
     setDecimals(12,2);
@@ -33,6 +34,7 @@ ModelPart::ModelPart(QObject *parent) : DbTableModel("parti",parent)
     setDecimals(14,2);
     setDecimals(17,2);
     setDecimals(18,2);
+    setDefaultValue(24,1);
 
     setSort("parti.n_s, parti.dat_part");
 }
