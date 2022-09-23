@@ -867,6 +867,7 @@
   <tabstop>lineEditKvo</tabstop>
   <tabstop>comboBoxPack</tabstop>
   <tabstop>comboBoxLong</tabstop>
+  <tabstop>comboBoxVar</tabstop>
   <tabstop>plainTextEdit</tabstop>
   <tabstop>tableViewGlass</tabstop>
   <tabstop>tableViewGlassCont</tabstop>

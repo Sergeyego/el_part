@@ -196,10 +196,11 @@ void MainWidget::updPart()
     if (/*ind>=0*/!ui->comboBoxOnly->currentText().isEmpty()){
         id_el=ui->comboBoxOnly->model()->data(ui->comboBoxOnly->model()->index(ind,0),Qt::EditRole).toInt();
     }
-    modelPart->refresh(ui->dateEditBeg->date(),ui->dateEditEnd->date(),id_el);
     if (sender()==ui->pushButtonUpd){
         modelMix->refreshRel(ui->dateEditBeg->date().addYears(-1),ui->dateEditEnd->date().addYears(1));
+        Rels::instance()->refresh();
     }
+    modelPart->refresh(ui->dateEditBeg->date(),ui->dateEditEnd->date(),id_el);
 }
 
 void MainWidget::refreshCont(int ind)
