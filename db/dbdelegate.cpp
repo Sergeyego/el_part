@@ -167,9 +167,9 @@ void DbDelegate::setModelData ( QWidget * editor, QAbstractItemModel * model, co
                     combo->setCurrentIndex(pos);
                     v=combo->model()->data(combo->model()->index(combo->currentIndex(),sqlModel->relation(index.column())->columnKey()),Qt::EditRole);
                 } else if (!text.isEmpty()) {
-                    QSortFilterProxyModel *fmodel = qobject_cast<QSortFilterProxyModel *>(combo->model());
-                    if (fmodel){
-                        DbTableModel *m = qobject_cast<DbTableModel *>(fmodel->sourceModel());
+                    //QSortFilterProxyModel *fmodel = qobject_cast<QSortFilterProxyModel *>(combo->model());
+                    //if (fmodel){
+                        DbTableModel *m = qobject_cast<DbTableModel *>(/*fmodel->sourceModel()*/combo->model());
                         if (m){
                             int n=QMessageBox::information(NULL,QString::fromUtf8("Предупреждение"),QString::fromUtf8("Не найдено значение ")+text+QString::fromUtf8(". Добавить его в таблицу?"),QMessageBox::Yes,QMessageBox::No);
                             if (n==QMessageBox::Yes){
@@ -182,7 +182,7 @@ void DbDelegate::setModelData ( QWidget * editor, QAbstractItemModel * model, co
                                 }
                             }
                         }
-                    }
+                    //}
                 }
                 QVariant val = v.isNull() ? sqlModel->nullVal(index.column()) : v;
                 sqlModel->setData(index,val,Qt::EditRole);
