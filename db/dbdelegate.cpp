@@ -90,7 +90,7 @@ void DbDelegate::setEditorData ( QWidget * editor, const QModelIndex & index ) c
             if (combo) {
                 QAbstractItemModel *childModel=sqlModel->relation(index.column())->model();
                 if (childModel){
-                    combo->setModel(sqlModel->relation(index.column())->proxyModel());
+                    combo->setModel(sqlModel->relation(index.column())->model());
                     combo->setModelColumn(sqlModel->relation(index.column())->columnDisplay());
                     combo->setEditable(true);
                     CustomCompletter *c = new CustomCompletter(combo);
