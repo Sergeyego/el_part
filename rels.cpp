@@ -26,8 +26,8 @@ Rels::Rels(QObject *parent) : QObject(parent)
     relLong = new DbRelation(QString("select id, nam from el_long order by nam"),0,1,this);
     relVar = new DbRelation(QString("select id, nam from elrtr_vars order by id"),0,1,this);
 
-    relRcp->proxyModel()->setFilterKeyColumn(2);
-    relRcp->proxyModel()->setFilterFixedString("1");
+    //relRcp->proxyModel()->setFilterKeyColumn(2);
+    //relRcp->proxyModel()->setFilterFixedString("1");
 }
 
 void Rels::refresh()
