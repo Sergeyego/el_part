@@ -149,7 +149,6 @@ MainWidget::MainWidget(QWidget *parent) :
     connect(ui->comboBoxOnly->lineEdit(),SIGNAL(textChanged(QString)),this,SLOT(updPart()));
     connect(ui->toolButtonChem,SIGNAL(clicked(bool)),this,SLOT(loadChem()));
     connect(modelChem,SIGNAL(sigUpd()),modelPart,SLOT(refreshState()));
-    connect(modelChem,SIGNAL(sigUpd()),this,SLOT(lockChemSampCh()));
     connect(modelMech,SIGNAL(sigUpd()),modelPart,SLOT(refreshState()));
     connect(ui->comboBoxRcp,SIGNAL(currentIndexChanged(int)),this,SLOT(insertMark(int)));
     connect(ui->comboBoxMark,SIGNAL(currentIndexChanged(int)),this,SLOT(insertProvol(int)));
@@ -193,12 +192,27 @@ void MainWidget::updPart()
 {
     int ind=ui->comboBoxOnly->currentIndex();
     int id_el=-1;
-    if (/*ind>=0*/!ui->comboBoxOnly->currentText().isEmpty()){
+    if (!ui->comboBoxOnly->currentText().isEmpty()){
         id_el=ui->comboBoxOnly->model()->data(ui->comboBoxOnly->model()->index(ind,0),Qt::EditRole).toInt();
     }
     if (sender()==ui->pushButtonUpd){
         modelMix->refreshRel(ui->dateEditBeg->date().addYears(-1),ui->dateEditEnd->date().addYears(1));
+        ui->comboBoxOnly->blockSignals(true);
         Rels::instance()->refresh();
+        ui->comboBoxOnly->blockSignals(false);
+        if (ui->comboBoxChemDev->model()->rowCount()){
+            ui->comboBoxChemDev->setCurrentIndex(0);
+        }
+        if (id_el>=0){
+            for (int i=0; i<ui->comboBoxOnly->model()->rowCount(); i++){
+                if (id_el==ui->comboBoxOnly->model()->data(ui->comboBoxOnly->model()->index(i,0),Qt::EditRole).toInt()){
+                    ui->comboBoxOnly->blockSignals(true);
+                    ui->comboBoxOnly->setCurrentIndex(i);
+                    ui->comboBoxOnly->blockSignals(false);
+                    break;
+                }
+            }
+        }
     }
     modelPart->refresh(ui->dateEditBeg->date(),ui->dateEditEnd->date(),id_el);
 }
@@ -213,7 +227,6 @@ void MainWidget::refreshCont(int ind)
     modelMix->refresh(id_part);
     modelGlass->refresh(id_part);
     ui->tableViewGlass->setCurrentIndex(ui->tableViewGlass->model()->index(0,1));
-    lockChemSampCh();
 }
 
 void MainWidget::loadChem()
@@ -289,27 +302,23 @@ void MainWidget::copyPar()
 
 void MainWidget::insertChemSamp()
 {
-    if (modelChem->isEmpty()){
-        int id_dev=ui->comboBoxChemDev->model()->data(ui->comboBoxChemDev->model()->index(ui->comboBoxChemDev->currentIndex(),0),Qt::EditRole).toInt();
-        QList <int> l = modelChem->ids();
-        foreach (int key,l){
-            modelChem->addChem(key,0.0,id_dev);
-        }
-        modelChem->select();
-        lockChemSampCh();
-        modelPart->refreshState();
+    QList<int> ids;
+    int id_dev=ui->comboBoxChemDev->model()->data(ui->comboBoxChemDev->model()->index(ui->comboBoxChemDev->currentIndex(),0),Qt::EditRole).toInt();
+    QList <int> l = modelChem->ids();
+    foreach (int key,l){
+        int id=modelChem->addChem(key,0.0,id_dev);
+        ids.push_back(id);
     }
-}
-
-void MainWidget::lockChemSampCh()
-{
-    ui->toolButtonSamp->setEnabled(modelChem->isEmpty());
+    DialogTmp dt;
+    dt.load(currentIdPart(),id_dev,ids);
+    dt.exec();
+    modelChem->select();
+    modelPart->refreshState();
 }
 
 void MainWidget::lockChangedMap(bool lock)
 {
     if (!lock){
-        lockChemSampCh();
         ui->toolButtonCopyPar->setEnabled(modelConsStatPar->rowCount()>0);
     }
 }

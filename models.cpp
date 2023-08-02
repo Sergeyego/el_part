@@ -118,7 +118,7 @@ ModelChem::~ModelChem()
 
 }
 
-void ModelChem::refresh(int id_part)
+void ModelChem::refresh(int id_part, QString dopFlt)
 {
     map.clear();
     QSqlQuery query;
@@ -135,7 +135,13 @@ void ModelChem::refresh(int id_part)
     } else {
         QMessageBox::critical(NULL,"Error",query.lastError().text(),QMessageBox::Cancel);
     }
-    setFilter(flt+" = "+QString::number(id_part));
+    QString strFlt;
+    if (!dopFlt.isEmpty()){
+        strFlt=dopFlt+" and "+flt+" = "+QString::number(id_part);
+    } else {
+        strFlt=flt+" = "+QString::number(id_part);
+    }
+    setFilter(strFlt);
     setDefaultValue(colIdPart,id_part);
     select();
 }
@@ -213,20 +219,24 @@ ModelChemSrc::ModelChemSrc(QObject *parent) : ModelChem("parti_chem",parent)
             "and c.id_var = (select p.id_var from parti as p where p.id = :id )";
 }
 
-bool ModelChemSrc::addChem(int id_chem, double val, int id_dev)
+int ModelChemSrc::addChem(int id_chem, double val, int id_dev)
 {
     int id_part=defaultValue(colIdPart).toInt();
+    int id=-1;
     QSqlQuery query;
-    query.prepare("insert into parti_chem (id_part, id_chem, kvo, id_dev) values (:id_part, :id_chem, :kvo, :id_dev)");
+    query.prepare("insert into parti_chem (id_part, id_chem, kvo, id_dev) values (:id_part, :id_chem, :kvo, :id_dev) returning id");
     query.bindValue(":id_part",id_part);
     query.bindValue(":id_chem",id_chem);
     query.bindValue(":kvo",val);
     query.bindValue(":id_dev",id_dev);
-    bool ok=query.exec();
-    if (!ok){
+    if (query.exec()){
+        while (query.next()){
+            id=query.value(0).toInt();
+        }
+    } else {
         QMessageBox::critical(NULL,"Error",query.lastError().text(),QMessageBox::Cancel);
     }
-    return ok;
+    return id;
 }
 
 QList <int> ModelChemSrc::ids()

@@ -33,7 +33,7 @@ public:
     ModelChem(QString tname, QObject *parent=0);
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
     ~ModelChem();
-    void refresh(int id_part);
+    void refresh(int id_part, QString dopFlt="");
 private:
     QColor getColor(const QModelIndex &index) const;
     QString getToolTip(const QModelIndex &index) const;
@@ -52,7 +52,7 @@ class ModelChemSrc : public ModelChem
 {
 public:
     ModelChemSrc(QObject *parent=0);
-    bool addChem(int id_chem, double val, int id_dev);
+    int addChem(int id_chem, double val, int id_dev);
     QList <int> ids();
 };
 

@@ -7,6 +7,7 @@
 #include "dialogloadchem.h"
 #include <QSqlQuery>
 #include <QSettings>
+#include "dialogtmp.h"
 
 namespace Ui {
 class MainWidget;
@@ -44,7 +45,6 @@ private slots:
     void insertProvol(int markIndex);
     void copyPar();
     void insertChemSamp();
-    void lockChemSampCh();
     void lockChangedMap(bool lock);
     void setCurrentChemDev(int index);
     void setDefaultPack();

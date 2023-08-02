@@ -36,7 +36,8 @@ SOURCES += \
     models.cpp \
     rels.cpp \
     dialogloadchem.cpp \
-    modelro.cpp
+    modelro.cpp \
+    dialogtmp.cpp
 
 HEADERS += \
         mainwidget.h \
@@ -48,12 +49,14 @@ HEADERS += \
     models.h \
     rels.h \
     dialogloadchem.h \
-    modelro.h
+    modelro.h \
+    dialogtmp.h
 
 FORMS += \
         mainwidget.ui \
     db/dblogin.ui \
-    dialogloadchem.ui
+    dialogloadchem.ui \
+    dialogtmp.ui
 
 RESOURCES += \
     res.qrc
